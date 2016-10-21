@@ -1,3 +1,3 @@
 # heatmap-volcano-pca
 
-Deployed at [https://mccalluc.github.io/heatmap-volcano-pca/]
+[demo](https://mccalluc.github.io/heatmap-volcano-pca/)
