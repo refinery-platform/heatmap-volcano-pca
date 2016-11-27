@@ -6,9 +6,9 @@
     {
       "name": "gene_expression_level",
       "values": [
-        {"gene": "A", "condition": "X", "level": 0.5},
-        {"gene": "B", "condition": "Y", "level": 0.2},
-        {"gene": "C", "condition": "Z", "level": 0.7}
+        {"gene": "A", "condition": "X", "level": 0.5, "log_fold_change": -0.1, "negative_log_p": 0.1, "condition_1": 0.1, "condition_2": 0.1},
+        {"gene": "B", "condition": "Y", "level": 0.2, "log_fold_change": 0.0, "negative_log_p": 0.2, "condition_1": 0.2, "condition_2": 0.2},
+        {"gene": "C", "condition": "Z", "level": 0.7, "log_fold_change": 0.1, "negative_log_p": 0.1, "condition_1": 0.3, "condition_2": 0.3}
       ]
     }
   ],
@@ -27,9 +27,9 @@
     }, {
       "name": "level",
       "type": "linear",
-      "domain": [0.5, 0.2, 0.7],
-      "range": ["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"],
-      "zero": false
+      "domain": {"data": "gene_expression_level", "field": "level"},
+      "range": ["#FFF", "#F00"],
+      "zero": true
     }
   ],
 
