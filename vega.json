@@ -1,0 +1,56 @@
+{
+  "width": 400,
+  "height": 400,
+
+  "data": [
+    {
+      "name": "gene_expression_level",
+      "values": [
+        {"gene": "A", "condition": "X", "level": 0.5},
+        {"gene": "B", "condition": "Y", "level": 0.2},
+        {"gene": "C", "condition": "Z", "level": 0.7}
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "gene",
+      "type": "ordinal",
+      "domain": {"data": "gene_expression_level", "field": "gene"},
+      "range": "width"
+    }, {
+      "name": "condition",
+      "type": "ordinal",
+      "domain": {"data": "gene_expression_level", "field": "condition"},
+      "range": "height"
+    }, {
+      "name": "level",
+      "type": "linear",
+      "domain": [0.5, 0.2, 0.7],
+      "range": ["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"],
+      "zero": false
+    }
+  ],
+
+  "axes": [
+    {"type": "x", "scale": "gene", "title": "Genes", "tickSize": 0},
+    {"type": "y", "scale": "condition", "title": "Conditions", "tickSize": 0}
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "gene_expression_level"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "gene", "field": "gene"},
+          "width": {"scale": "gene", "band": true},
+          "y": {"scale": "condition", "field": "condition"},
+          "height": {"scale": "condition", "band": true},
+          "fill": {"scale": "level", "field": "level"}
+        }
+      }
+    }
+  ]
+}
