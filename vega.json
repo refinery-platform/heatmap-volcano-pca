@@ -13,44 +13,116 @@
     }
   ],
 
-  "scales": [
-    {
-      "name": "gene",
-      "type": "ordinal",
-      "domain": {"data": "gene_expression_level", "field": "gene"},
-      "range": "width"
-    }, {
-      "name": "condition",
-      "type": "ordinal",
-      "domain": {"data": "gene_expression_level", "field": "condition"},
-      "range": "height"
-    }, {
-      "name": "level",
-      "type": "linear",
-      "domain": {"data": "gene_expression_level", "field": "level"},
-      "range": ["#FFF", "#F00"],
-      "zero": true
-    }
-  ],
-
-  "axes": [
-    {"type": "x", "scale": "gene", "title": "Genes", "tickSize": 0},
-    {"type": "y", "scale": "condition", "title": "Conditions", "tickSize": 0}
-  ],
-
   "marks": [
     {
-      "type": "rect",
-      "from": {"data": "gene_expression_level"},
+      "type": "group",
+      
       "properties": {
-        "enter": {
-          "x": {"scale": "gene", "field": "gene"},
-          "width": {"scale": "gene", "band": true},
-          "y": {"scale": "condition", "field": "condition"},
-          "height": {"scale": "condition", "band": true},
-          "fill": {"scale": "level", "field": "level"}
+        "update": {
+          "x": {"value": 0},
+          "width": {"value": 100},
+          "y": {"value": 0},
+          "height": {"value": 100}
         }
-      }
+      },
+          
+      "scales": [
+        {
+          "name": "gene",
+          "type": "ordinal",
+          "domain": {"data": "gene_expression_level", "field": "gene"},
+          "range": "width"
+        }, {
+          "name": "condition",
+          "type": "ordinal",
+          "domain": {"data": "gene_expression_level", "field": "condition"},
+          "range": "height"
+        }, {
+          "name": "level",
+          "type": "linear",
+          "domain": {"data": "gene_expression_level", "field": "level"},
+          "range": ["#FFF", "#F00"],
+          "zero": true
+        }
+      ],
+    
+      "axes": [
+        {"type": "x", "scale": "gene", "title": "Genes", "tickSize": 0},
+        {"type": "y", "scale": "condition", "title": "Conditions", "tickSize": 0}
+      ],
+      
+      "marks": [
+          
+        {
+          "type": "rect",
+          "from": {"data": "gene_expression_level"},
+          "properties": {
+            "enter": {
+              "x": {"scale": "gene", "field": "gene"},
+              "width": {"scale": "gene", "band": true},
+              "y": {"scale": "condition", "field": "condition"},
+              "height": {"scale": "condition", "band": true},
+              "fill": {"scale": "level", "field": "level"}
+            }
+          }
+        }
+        
+      ]
+    },
+    {
+      "type": "group",
+      
+      "properties": {
+        "update": {
+          "x": {"value": 0},
+          "width": {"value": 100},
+          "y": {"value": 150},
+          "height": {"value": 100}
+        }
+      },
+          
+      "scales": [
+        {
+          "name": "gene",
+          "type": "ordinal",
+          "domain": {"data": "gene_expression_level", "field": "gene"},
+          "range": "width"
+        }, {
+          "name": "condition",
+          "type": "ordinal",
+          "domain": {"data": "gene_expression_level", "field": "condition"},
+          "range": "height"
+        }, {
+          "name": "level",
+          "type": "linear",
+          "domain": {"data": "gene_expression_level", "field": "level"},
+          "range": ["#FFF", "#F00"],
+          "zero": true
+        }
+      ],
+    
+      "axes": [
+        {"type": "x", "scale": "gene", "title": "Genes", "tickSize": 0},
+        {"type": "y", "scale": "condition", "title": "Conditions", "tickSize": 0}
+      ],
+      
+      "marks": [
+          
+        {
+          "type": "rect",
+          "from": {"data": "gene_expression_level"},
+          "properties": {
+            "enter": {
+              "x": {"scale": "gene", "field": "gene"},
+              "width": {"scale": "gene", "band": true},
+              "y": {"scale": "condition", "field": "condition"},
+              "height": {"scale": "condition", "band": true},
+              "fill": {"scale": "level", "field": "level"}
+            }
+          }
+        }
+        
+      ]
     }
   ]
 }
