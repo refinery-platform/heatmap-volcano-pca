@@ -35,6 +35,28 @@
       ]
     }
   ],
+  "signals": [
+    {
+      "name": "brush_start",
+      "init": {},
+      "streams": [
+        {
+          "type": "mousedown",
+          "expr": "{x: iscale('x', clamp(eventX(), 0, width)), y: iscale('y', clamp(eventY(), 0, height))}"
+        }
+      ]
+    },
+    {
+      "name": "brush_end",
+      "init": {},
+      "streams": [
+        {
+          "type": "mousedown, [mousedown, window:mouseup] > window:mousemove",
+          "expr": "{x: iscale('x', clamp(eventX(), 0, width)), y: iscale('y', clamp(eventY(), 0, height))}"
+        }
+      ]
+    }
+  ],
   "marks": [
     {
       "type": "group",
@@ -42,7 +64,7 @@
         "update": {
           "x": {"value": 0},
           "width": {"value": 100},
-          "y": {"value": 0},
+          "y": {"value": 150},
           "height": {"value": 100}
         }
       },
@@ -106,7 +128,7 @@
         "update": {
           "x": {"value": 0},
           "width": {"value": 100},
-          "y": {"value": 150},
+          "y": {"value": 0},
           "height": {"value": 100}
         }
       },
@@ -146,6 +168,21 @@
       ],
       "marks": [
         {
+          "type": "rect",
+          "properties": {
+            "enter": {
+              "fill": {"value": "grey"},
+              "fillOpacity": {"value": 0.2}
+            },
+            "update": {
+              "x": {"signal": "brush_start.x"},
+              "x2": {"signal": "brush_end.x"},
+              "y": {"signal": "brush_start.y"},
+              "y2": {"signal": "brush_end.y"}
+            }
+          }
+        },
+        {
           "type": "symbol",
           "from": {"data": "gene_expression_level"},
           "properties": {
@@ -171,7 +208,7 @@
         "update": {
           "x": {"value": 175},
           "width": {"value": 100},
-          "y": {"value": 150},
+          "y": {"value": 0},
           "height": {"value": 100}
         }
       },
