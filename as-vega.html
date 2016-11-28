@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>as-vega</title>
+    <script src="https://vega.github.io/vega-editor/vendor/d3.min.js"></script>
+    <script src="https://vega.github.io/vega/vega.min.js"></script>
+  </head>
+  <body>
+    <h1>as-vega</h1>
+    <p>TODO: do someting with selected rectangle.</p>
+    <div id="vis"></div>
+  </body>
+<script type="text/javascript">
+// parse a spec and create a visualization view
+function parse(spec) {
+  vg.parse.spec(spec, function(error, chart) { chart({el:"#vis"}).update(); });
+}
+parse('vega.json');
+</script>
+</html>
