@@ -83,41 +83,35 @@
           
       "scales": [
         {
-          "name": "gene",
-          "type": "ordinal",
-          "domain": {"data": "gene_expression_level", "field": "gene"},
-          "range": "width"
-        }, {
-          "name": "condition",
-          "type": "ordinal",
-          "domain": {"data": "gene_expression_level", "field": "condition"},
-          "range": "height"
-        }, {
-          "name": "level",
+          "name": "log_fold_change",
           "type": "linear",
-          "domain": {"data": "gene_expression_level", "field": "level"},
-          "range": ["#FFF", "#F00"],
-          "zero": true
+          "domain": {"data": "gene_expression_level", "field": "log_fold_change"},
+          "range": "width"
+        },
+        {
+          "name": "negative_log_p",
+          "type": "linear",
+          "domain": {"data": "gene_expression_level", "field": "negative_log_p"},
+          "range": "height"
         }
       ],
     
       "axes": [
-        {"type": "x", "scale": "gene", "title": "Genes", "tickSize": 0},
-        {"type": "y", "scale": "condition", "title": "Conditions", "tickSize": 0}
+        {"type": "x", "scale": "log_fold_change", "title": "log(fold change)", "ticks": 3},
+        {"type": "y", "scale": "negative_log_p", "title": "-log(p)", "ticks": 3}
       ],
       
       "marks": [
           
         {
-          "type": "rect",
+          "type": "symbol",
           "from": {"data": "gene_expression_level"},
           "properties": {
             "enter": {
-              "x": {"scale": "gene", "field": "gene"},
-              "width": {"scale": "gene", "band": true},
-              "y": {"scale": "condition", "field": "condition"},
-              "height": {"scale": "condition", "band": true},
-              "fill": {"scale": "level", "field": "level"}
+              "x": {"scale": "log_fold_change", "field": "log_fold_change"},
+              "y": {"scale": "negative_log_p", "field": "negative_log_p"},
+              "size": {"value": 20},
+              "fill": {"value": "#000"}
             }
           }
         }
