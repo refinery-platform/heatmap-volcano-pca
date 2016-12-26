@@ -2,9 +2,51 @@
 <div id="target"></div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-d3.tsv('data/rlogMat.tsv', function(error, data) {
+var width = 300,
+    height = 200;
+
+d3.tsv('data/rlogMat.head.tsv', function(error, matrix) {
   if (error) throw error;
-  console.dir(data);
+    
+	var dx = matrix.columns.length - 1,
+		dy = matrix.length;
+
+	var x = d3.scaleLinear()
+	  .domain([0, dx])
+	  .range([0, width]);
+
+	var y = d3.scaleLinear()
+	  .domain([0, dy])
+	  .range([height, 0]);
+
+  d3.select("body").append("canvas")
+      .attr("width", dx)
+      .attr("height", dy)
+      .style("width", width + "px")
+      .style("height", height + "px")
+      .call(drawImage);
+      
+function drawImage(canvas) {
+    var context = canvas.node().getContext("2d"),
+        image = context.createImageData(dx, dy);
+        
+    var color = d3.scaleLinear()
+      .domain([-20,0,20])
+      .range(['blue','white','red']);
+
+    for (var y = 0, p = -1; y < dy; ++y) {
+      for (var x = 1; x <= dx; ++x) {
+        var c = d3.rgb(color(matrix[y][matrix.columns[x]]));
+        image.data[++p] = c.r;
+        image.data[++p] = c.g;
+        image.data[++p] = c.b;
+        image.data[++p] = 255;
+      }
+    }
+
+    context.putImageData(image, 0, 0);
+  }
+
 });
 </script>
 </body></html>
