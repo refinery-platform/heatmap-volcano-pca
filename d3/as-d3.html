@@ -2,5 +2,9 @@
 <div id="target"></div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-console.log(d3.min
-</script></body></html>
+d3.tsv('data/rlogMat.tsv', function(error, data) {
+  if (error) throw error;
+  console.dir(data);
+});
+</script>
+</body></html>
