@@ -15,7 +15,7 @@ canvas {
 var width = 300,
     height = 300;
 
-d3.tsv('data/rlogMat.head.tsv', function(error, matrix) {
+d3.tsv('data/rlogMat.tsv', function(error, matrix) {
   if (error) throw error;
     
 	var dx = matrix.columns.length - 1,
@@ -30,23 +30,35 @@ d3.tsv('data/rlogMat.head.tsv', function(error, matrix) {
 	  .range([height, 0]);
 
   d3.select("body").append("canvas")
-      .attr("width", dx)
-      .attr("height", dy)
+      .attr("width", dx) // Stretch canvas pixels
+      .attr("height", height)
       .style("width", width + "px")
       .style("height", height + "px")
       .call(drawImage);
       
 function drawImage(canvas) {
     var context = canvas.node().getContext("2d"),
-        image = context.createImageData(dx, dy);
+        image = context.createImageData(dx, height);
+        // One canvas pixel for data horizontally,
+        // but combine data rows into a single canvas pixel row.
+        
+    var data_rows_per_pixel_row = dy / height;
+    console.log('data rows / pixel row', data_rows_per_pixel_row);
         
     var color = d3.scaleLinear()
-      .domain([-20,0,20])
+      .domain([-20,0,20]) // TODO: Set from data
       .range(['blue','white','red']);
 
-    for (var y = 0, p = -1; y < dy; ++y) {
-      for (var x = 1; x <= dx; ++x) {
-        var c = d3.rgb(color(matrix[y][matrix.columns[x]]));
+    for (var y = 0, p = -1; y < height; ++y) {
+      for (var x = 1; x <= dx; ++x) { // 0-column is row ID
+        var mean = d3.mean(d3.range(data_rows_per_pixel_row).map(
+          function(i) {
+            return matrix[y+i][matrix.columns[x]];
+            // TODO: If data_rows_per_pixel_row is not an integer, rows may be double counted
+            // --> Use histogram machinery.
+          }
+        ));
+        var c = d3.rgb(color(mean));
         image.data[++p] = c.r;
         image.data[++p] = c.g;
         image.data[++p] = c.b;
