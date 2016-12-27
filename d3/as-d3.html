@@ -21,13 +21,23 @@ d3.tsv('data/rlogMat.tsv', function(error, matrix) {
 	var dx = matrix.columns.length - 1,
 		dy = matrix.length;
 
-	var x = d3.scaleLinear()
-	  .domain([0, dx])
-	  .range([0, width]);
+var columns = [''].concat(matrix.columns.slice(1)); // Hide ID column
 
-	var y = d3.scaleLinear()
-	  .domain([0, dy])
-	  .range([height, 0]);
+var x = d3.scaleOrdinal(d3.range(matrix.columns.length).map(function(i){return i*width/matrix.columns.length}))
+    .domain(columns);
+
+var axis = d3.axisTop()
+    .scale(x);
+    
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", 50)
+  .append("g")
+    .attr("transform", "translate(0,50)");
+
+svg.append("g")
+    .call(axis)
+    .selectAll('text').style('transform','rotate(90deg) translatex(-30px)');
 
   d3.select("body").append("canvas")
       .attr("width", dx) // Stretch canvas pixels
