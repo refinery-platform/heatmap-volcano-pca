@@ -4,7 +4,7 @@ define(['d3'],
         var width = 300,
             height = 300;
 
-        function heatmap_labels(selection) {
+        function heatmap_axes(selection) {
           selection.each(function (matrix, i) {
             var columns = matrix.columns.slice(1); // Skip ID column
 
@@ -82,32 +82,43 @@ define(['d3'],
           });
         }
 
-        function scatterplot_body(selection) {
+        function scatterplot_scales(matrix) {
+          // TODO: only run this once
+          // column-0 is ID
+          var x_axis_column = matrix.columns[1];
+          var y_axis_column = matrix.columns[2];
+
+          var x_extent = d3.extent(matrix, function (row) {
+            return +row[x_axis_column]
+          });
+          var y_extent = d3.extent(matrix, function (row) {
+            return +row[y_axis_column]
+          });
+
+          var x_scale = d3.scaleLinear()
+              .domain(x_extent)
+              .range([0, width]);
+          var y_scale = d3.scaleLinear()
+              .domain(y_extent)
+              .range([height, 0]);
+          return {
+            x: x_scale,
+            y: y_scale,
+            x_column: x_axis_column,
+            y_column: y_axis_column
+          }
+        }
+
+        function scatterplot_axes(selection) {
           selection.each(function (matrix, i) {
-            // column-0 is ID
-            var x_axis_column = matrix.columns[1];
-            var y_axis_column = matrix.columns[2];
+            var scales = scatterplot_scales(matrix);
 
-            var x_extent = d3.extent(matrix, function (row) {
-              return +row[x_axis_column]
-            });
-            var y_extent = d3.extent(matrix, function (row) {
-              return +row[y_axis_column]
-            });
-
-            var x_scale = d3.scaleLinear()
-                .domain(x_extent)
-                .range([0, width]);
-            var y_scale = d3.scaleLinear()
-                .domain(y_extent)
-                .range([height, 0]);
-
-            var x_axis = d3.axisBottom().scale(x_scale);
-            var y_axis = d3.axisLeft().scale(y_scale);
+            var x_axis = d3.axisBottom().scale(scales.x);
+            var y_axis = d3.axisLeft().scale(scales.y);
 
             var svg_axes = d3.select(this).append("svg")
-                .attr("width", width+50)
-                .attr("height", height+50)
+                .attr("width", width + 50)
+                .attr("height", height + 50)
                 .attr("transform", "translate(50,0)")
                 .style("position", "absolute");
             svg_axes.append("g")
@@ -115,11 +126,17 @@ define(['d3'],
                 .call(x_axis);
             svg_axes.append("g")
                 .call(y_axis);
+          });
+        }
 
+        function scatterplot_body(selection) {
+          selection.each(function (matrix, i) {
+            var scales = scatterplot_scales(matrix);
             d3.select(this).append("canvas")
                 .attr("width", width)
                 .attr("height", height)
-                .style("position", "absolute")
+                .style("position", "relative")
+                .style("left", "50px")
                 .style("width", width + "px")
                 .style("height", height + "px")
                 .style("image-rendering", "-moz-crisp-edges")
@@ -129,9 +146,9 @@ define(['d3'],
               var context = canvas.node().getContext("2d");
               context.fillStyle = "rgba(0,0,0,1)";
               matrix.forEach(function (row) {
-                var x = x_scale(+row[x_axis_column]);
-                var y = y_scale(+row[y_axis_column]);
-                context.fillRect( x, y, 1, 1 );
+                var x = scales.x(+row[scales.x_column]);
+                var y = scales.y(+row[scales.y_column]);
+                context.fillRect(x, y, 1, 1);
               })
             }
           });
@@ -142,11 +159,12 @@ define(['d3'],
             d3.select(this).append("div")
                 .style("width", width + 'px')
                 .style("float", "left")
-                .call(heatmap_labels)
+                .call(heatmap_axes)
                 .call(heatmap_body);
             d3.select(this).append("div")
                 .style("width", width + 'px')
                 .style("float", "left")
+                .call(scatterplot_axes)
                 .call(scatterplot_body);
           });
         }
