@@ -1,13 +1,6 @@
 <!DOCTYPE html><html><head><meta charset="utf-8" />
 <style>
-canvas {
-    image-rendering: optimizeSpeed;             // Older versions of FF
-    image-rendering: -moz-crisp-edges;          // FF 6.0+
-    image-rendering: -webkit-optimize-contrast; // Webkit (non standard naming)
-    image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+)
-    image-rendering: crisp-edges;               // Possible future browsers.
-    -ms-interpolation-mode: nearest-neighbor;   // IE (non standard naming)
-}
+
 </style></head><body>
 <div id="target"></div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -43,14 +36,15 @@ labels.append("g")
     .attr('text-anchor', 'end');
     
 labels.selectAll('text').style('transform','rotate(90deg)');
-labels.selectAll('line').style('display','none');
-labels.selectAll('path').style('display','none');
+labels.selectAll('line').remove();
+labels.selectAll('path').remove();
 
   heatmap_container.append("canvas")
       .attr("width", dx) // Stretch canvas pixels
       .attr("height", height)
       .style("width", width + "px")
       .style("height", height + "px")
+      .style("image-rendering", "-moz-crisp-edges")
       .call(drawImage);
       
 function drawImage(canvas) {
