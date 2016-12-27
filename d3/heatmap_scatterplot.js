@@ -89,10 +89,10 @@ define(['d3'],
             var y_axis_column = matrix.columns[2];
 
             var x_extent = d3.extent(matrix, function (row) {
-              return row[x_axis_column]
+              return +row[x_axis_column]
             });
             var y_extent = d3.extent(matrix, function (row) {
-              return row[y_axis_column]
+              return +row[y_axis_column]
             });
 
             var x_scale = d3.scaleLinear()
@@ -100,22 +100,23 @@ define(['d3'],
                 .range([0, width]);
             var y_scale = d3.scaleLinear()
                 .domain(y_extent)
-                .range([0, height]);
+                .range([height, 0]);
 
             var x_axis = d3.axisBottom().scale(x_scale);
             var y_axis = d3.axisLeft().scale(y_scale);
 
             var svg_axes = d3.select(this).append("svg")
                 .attr("width", width+50)
-                .attr("height", height+50);
+                .attr("height", height+50)
+                .attr("transform", "translate(50,0)");
             svg_axes.append("g")
                 .attr("transform", "translate(0," + height + ")")
                 .call(x_axis);
             svg_axes.append("g")
-                .attr("transform", "translate(" + width + ",0)")
                 .call(y_axis);
 
             console.log(x_extent);
+            console.log(y_extent);
 
             d3.select(this).append("canvas")
                 .attr("width", width)
@@ -127,7 +128,7 @@ define(['d3'],
 
             function draw_scatterplot(canvas) {
               matrix.forEach(function (row) {
-                console.log(row);
+                //console.log(row);
               })
             }
           });
