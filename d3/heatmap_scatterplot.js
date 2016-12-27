@@ -15,9 +15,6 @@ define(['d3'],
                     })
             ).domain(columns);
 
-            var axis = d3.axisTop()
-                .scale(x_scale);
-
             var labels = d3.select(this).append("svg")
                 .attr("width", width)
                 .attr("height", 50)
@@ -25,7 +22,7 @@ define(['d3'],
                 .attr("transform", "translate(0,50)");
 
             labels.append("g")
-                .call(axis)
+                .call(d3.axisTop().scale(x_scale))
                 .attr('text-anchor', 'end');
 
             labels.selectAll('text').style('transform', 'rotate(90deg)');
@@ -85,6 +82,57 @@ define(['d3'],
           });
         }
 
+        function scatterplot_body(selection) {
+          selection.each(function (matrix, i) {
+            // column-0 is ID
+            var x_axis_column = matrix.columns[1];
+            var y_axis_column = matrix.columns[2];
+
+            var x_extent = d3.extent(matrix, function (row) {
+              return row[x_axis_column]
+            });
+            var y_extent = d3.extent(matrix, function (row) {
+              return row[y_axis_column]
+            });
+
+            var x_scale = d3.scaleLinear()
+                .domain(x_extent)
+                .range([0, width]);
+            var y_scale = d3.scaleLinear()
+                .domain(y_extent)
+                .range([0, height]);
+
+            var x_axis = d3.axisBottom().scale(x_scale);
+            var y_axis = d3.axisLeft().scale(y_scale);
+
+            var svg_axes = d3.select(this).append("svg")
+                .attr("width", width+50)
+                .attr("height", height+50);
+            svg_axes.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(x_axis);
+            svg_axes.append("g")
+                .attr("transform", "translate(" + width + ",0)")
+                .call(y_axis);
+
+            console.log(x_extent);
+
+            d3.select(this).append("canvas")
+                .attr("width", width)
+                .attr("height", height)
+                .style("width", width + "px")
+                .style("height", height + "px")
+                .style("image-rendering", "-moz-crisp-edges")
+                .call(draw_scatterplot);
+
+            function draw_scatterplot(canvas) {
+              matrix.forEach(function (row) {
+                console.log(row);
+              })
+            }
+          });
+        }
+
         function chart(selection) {
           selection.each(function (matrix, i) {
             d3.select(this).append("div")
@@ -95,7 +143,7 @@ define(['d3'],
             d3.select(this).append("div")
                 .style("width", width + 'px')
                 .style("float", "left")
-                .text('TODO: scatterplot');
+                .call(scatterplot_body);
           });
         }
 
