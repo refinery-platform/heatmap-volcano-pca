@@ -7,7 +7,7 @@ d3.tsv('data/rlogMat.head.tsv', function(error, matrix) {
   if (error) throw error;
   d3.select("#target")
       .data([matrix])
-      .call(chart);
+      .call(heatmap_scatterplot());
 });
 </script>
 </body></html>
