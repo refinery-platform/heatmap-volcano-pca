@@ -40,7 +40,11 @@ var labels = heatmap_container.append("svg")
 
 labels.append("g")
     .call(axis)
-    .selectAll('text').style('transform','rotate(90deg) translatex(-30px)');
+    .attr('text-anchor', 'end');
+    
+labels.selectAll('text').style('transform','rotate(90deg)');
+labels.selectAll('line').style('display','none');
+labels.selectAll('path').style('display','none');
 
   heatmap_container.append("canvas")
       .attr("width", dx) // Stretch canvas pixels
