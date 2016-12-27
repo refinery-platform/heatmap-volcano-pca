@@ -1,14 +1,11 @@
-<!DOCTYPE html><html><head><meta charset="utf-8" />
-<style>
-
-</style></head><body>
+<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body>
 <div id="target"></div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
 var width = 300,
     height = 300;
 
-d3.tsv('data/rlogMat.head.tsv', function(error, matrix) {
+d3.tsv('data/rlogMat.tsv', function(error, matrix) {
   if (error) throw error;
     
 	var dx = matrix.columns.length - 1,
@@ -39,15 +36,18 @@ labels.selectAll('text').style('transform','rotate(90deg)');
 labels.selectAll('line').remove();
 labels.selectAll('path').remove();
 
+var canvas_pixel_width = dx;
+var canvas_pixel_height = d3.min([height,dy]);
+
   heatmap_container.append("canvas")
-      .attr("width", dx) // Stretch canvas pixels
-      .attr("height", height)
+      .attr("width", canvas_pixel_width)
+      .attr("height", canvas_pixel_height)
       .style("width", width + "px")
       .style("height", height + "px")
       .style("image-rendering", "-moz-crisp-edges")
-      .call(drawImage);
+      .call(draw_image);
       
-function drawImage(canvas) {
+function draw_image(canvas) {
     var context = canvas.node().getContext("2d"),
         image = context.createImageData(dx, height);
         // One canvas pixel for data horizontally,
@@ -60,7 +60,7 @@ function drawImage(canvas) {
       .domain([-20,0,20]) // TODO: Set from data
       .range(['blue','white','red']);
 
-    for (var y = 0, p = -1; y < height; ++y) {
+    for (var y = 0, p = -1; y < canvas_pixel_height; ++y) {
       for (var x = 1; x <= dx; ++x) { // 0-column is row ID
         var mean = d3.mean(d3.range(data_rows_per_pixel_row).map(
           function(i) {
