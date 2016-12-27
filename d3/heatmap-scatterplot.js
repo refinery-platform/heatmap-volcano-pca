@@ -1,28 +1,22 @@
 function heatmap_scatterplot() {
-  function chart(selection) {
+  var width = 300,
+      height = 300;
+
+  function column_labels(selection) {
     selection.each(function (matrix, i) {
-
-
-      var width = 300,
-          height = 300;
-
-      var dx = matrix.columns.length - 1,
-          dy = matrix.length;
-
       var columns = matrix.columns.slice(1); // Skip ID column
 
-      var x = d3.scaleOrdinal(d3.range(columns.length).map(function (i) {
-        return i * width / columns.length
-      }))
-          .domain(columns);
+      var x_scale = d3.scaleOrdinal(
+          d3.range(columns.length)
+              .map(function (i) {
+                return i * width / columns.length
+              })
+      ).domain(columns);
 
       var axis = d3.axisTop()
-          .scale(x);
+          .scale(x_scale);
 
-      var heatmap_container = d3.select(this)
-          .style("width", width + 'px');
-
-      var labels = heatmap_container.append("svg")
+      var labels = d3.select(this).append("svg")
           .attr("width", width)
           .attr("height", 50)
           .append("g")
@@ -35,6 +29,18 @@ function heatmap_scatterplot() {
       labels.selectAll('text').style('transform', 'rotate(90deg)');
       labels.selectAll('line').remove();
       labels.selectAll('path').remove();
+    });
+  }
+
+  function chart(selection) {
+    selection.each(function (matrix, i) {
+
+      var heatmap_container = d3.select(this)
+          .style("width", width + 'px')
+          .call(column_labels);
+
+      var dx = matrix.columns.length - 1,
+          dy = matrix.length;
 
       var canvas_pixel_width = dx;
       var canvas_pixel_height = d3.min([height, dy]);
@@ -45,9 +51,9 @@ function heatmap_scatterplot() {
           .style("width", width + "px")
           .style("height", height + "px")
           .style("image-rendering", "-moz-crisp-edges")
-          .call(draw_image);
+          .call(draw_heatmap);
 
-      function draw_image(canvas) {
+      function draw_heatmap(canvas) {
         var context = canvas.node().getContext("2d"),
             image = context.createImageData(dx, height);
         // One canvas pixel for data horizontally,
