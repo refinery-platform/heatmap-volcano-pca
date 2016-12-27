@@ -15,31 +15,34 @@ canvas {
 var width = 300,
     height = 300;
 
-d3.tsv('data/rlogMat.tsv', function(error, matrix) {
+d3.tsv('data/rlogMat.head.tsv', function(error, matrix) {
   if (error) throw error;
     
 	var dx = matrix.columns.length - 1,
 		dy = matrix.length;
 
-var columns = [''].concat(matrix.columns.slice(1)); // Hide ID column
+var columns = matrix.columns.slice(1); // Skip ID column
 
-var x = d3.scaleOrdinal(d3.range(matrix.columns.length).map(function(i){return i*width/matrix.columns.length}))
+var x = d3.scaleOrdinal(d3.range(columns.length).map(function(i){return i*width/columns.length}))
     .domain(columns);
 
 var axis = d3.axisTop()
     .scale(x);
     
-var svg = d3.select("body").append("svg")
+var heatmap_container = d3.select("body").append("div")
+    .style("width", width + 'px')
+    
+var labels = heatmap_container.append("svg")
     .attr("width", width)
     .attr("height", 50)
   .append("g")
     .attr("transform", "translate(0,50)");
 
-svg.append("g")
+labels.append("g")
     .call(axis)
     .selectAll('text').style('transform','rotate(90deg) translatex(-30px)');
 
-  d3.select("body").append("canvas")
+  heatmap_container.append("canvas")
       .attr("width", dx) // Stretch canvas pixels
       .attr("height", height)
       .style("width", width + "px")
