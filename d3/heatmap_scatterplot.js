@@ -108,27 +108,30 @@ define(['d3'],
             var svg_axes = d3.select(this).append("svg")
                 .attr("width", width+50)
                 .attr("height", height+50)
-                .attr("transform", "translate(50,0)");
+                .attr("transform", "translate(50,0)")
+                .style("position", "absolute");
             svg_axes.append("g")
                 .attr("transform", "translate(0," + height + ")")
                 .call(x_axis);
             svg_axes.append("g")
                 .call(y_axis);
 
-            console.log(x_extent);
-            console.log(y_extent);
-
             d3.select(this).append("canvas")
                 .attr("width", width)
                 .attr("height", height)
+                .style("position", "absolute")
                 .style("width", width + "px")
                 .style("height", height + "px")
                 .style("image-rendering", "-moz-crisp-edges")
                 .call(draw_scatterplot);
 
             function draw_scatterplot(canvas) {
+              var context = canvas.node().getContext("2d");
+              context.fillStyle = "rgba(0,0,0,1)";
               matrix.forEach(function (row) {
-                //console.log(row);
+                var x = x_scale(+row[x_axis_column]);
+                var y = y_scale(+row[y_axis_column]);
+                context.fillRect( x, y, 1, 1 );
               })
             }
           });
