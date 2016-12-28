@@ -69,18 +69,31 @@ define(['d3'],
                   } else {
                     d3.select(this)
                         .style('cursor', 'pointer')
-                        .on('click',function() {
-                          if (i > x_axis_index) {
-                            // If the selected column is between the two active ones,
-                            // take it as the y, and prefer to keep x stable.
-                            y_axis_index = i;
+                        .on('click', function () {
+                          if (d3.event.altKey) {
+                            x_axis_index = i + 1;
                           } else {
-                            x_axis_index = i;
+                            y_axis_index = i + 1;
                           }
-                          d3.select(container_node.parentNode).selectAll('.scatterplot-container')
+
+                          var heatmap_container = d3.select(container_node.parentNode)
+                              .selectAll('.heatmap-container');
+                          heatmap_container
+                              .selectAll('*').remove();
+                          heatmap_container
+                              .call(heatmap_axes)
+                              .call(heatmap_body); // TODO: Shouldn't need to redraw heatmap
+
+                          var scatterplot_container = d3.select(container_node.parentNode)
+                              .selectAll('.scatterplot-container');
+                          scatterplot_container
+                              .selectAll('*').remove();
+                          scatterplot_container
                               .call(scatterplot_axes)
                               .call(scatterplot_body);
-                        });
+                        })
+                        .append('title')
+                          .text('alt-click to change x-axis');
                   }
                 });
           });
