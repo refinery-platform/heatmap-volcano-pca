@@ -15,6 +15,23 @@ define(['d3'],
           }
         }
 
+        function matrix_extent(matrix) {
+          // There might be gains here if we can avoid excess array construction.
+          function num_extent(row) {
+            return d3.extent(d3.values(row).map(function (str) {
+              return +str
+            }));
+          }
+
+          return matrix.reduce(function (extent_acc, row) {
+            var row_extent = num_extent(row);
+            return [
+              d3.min([extent_acc[0], row_extent[0]]),
+              d3.max([extent_acc[1], row_extent[1]])
+            ];
+          }, num_extent(matrix[0]));
+        }
+
         function heatmap_axes(selection) {
           selection.each(function (matrix, i) {
             var columns = matrix.columns.slice(1); // Skip ID column
@@ -65,10 +82,13 @@ define(['d3'],
               // but combine data rows into a single canvas pixel row.
 
               var data_rows_per_pixel_row = dy / chart_height;
-              //console.log('data rows / pixel row', data_rows_per_pixel_row);
+
+              var extreme = d3.max(matrix_extent(matrix).map(function (minmax) {
+                return Math.abs(minmax)
+              }));
 
               var color = d3.scaleLinear()
-                  .domain([-20, 0, 20]) // TODO: Set from data
+                  .domain([-extreme, 0, extreme])
                   .range(['blue', 'white', 'red']);
 
               for (var y = 0, p = -1; y < canvas_pixel_height; ++y) {
@@ -80,10 +100,10 @@ define(['d3'],
                         // --> Use histogram machinery.
                       }
                   ));
-                  var c = d3.rgb(color(mean));
-                  image.data[++p] = c.r;
-                  image.data[++p] = c.g;
-                  image.data[++p] = c.b;
+                  var rgb = d3.rgb(color(mean));
+                  image.data[++p] = rgb.r;
+                  image.data[++p] = rgb.g;
+                  image.data[++p] = rgb.b;
                   image.data[++p] = 255;
                 }
               }
@@ -128,7 +148,8 @@ define(['d3'],
             var y_axis = d3.axisLeft().scale(scales.y);
 
             var svg_axes = d3.select(this).append("svg")
-                .attr("width", chart_width + gutter_width)
+            // "2 *" because axes need a little extra room on both ends.
+                .attr("width", chart_width + 2 * gutter_width)
                 .attr("height", chart_height + 2 * header_height)
                 .style("position", "absolute")
                 .append("g")
