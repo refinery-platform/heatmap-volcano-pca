@@ -1,8 +1,19 @@
 define(['d3'],
     function (d3) {
       return function () {
-        var width = 300,
-            height = 300;
+        var chart_width = 300,
+            chart_height = 300,
+            gutter_width = 50,
+            header_height = 50;
+
+        function crisp() {
+          // TODO: browser sniffing is bad, but this works for my particular browser set
+          if (window.navigator.userAgent && window.navigator.userAgent.match('WebKit')) {
+            return "pixelated"
+          } else {
+            return "-moz-crisp-edges"
+          }
+        }
 
         function heatmap_axes(selection) {
           selection.each(function (matrix, i) {
@@ -11,15 +22,15 @@ define(['d3'],
             var x_scale = d3.scaleOrdinal(
                 d3.range(columns.length)
                     .map(function (i) {
-                      return i * width / columns.length
+                      return i * chart_width / columns.length
                     })
             ).domain(columns);
 
             var labels = d3.select(this).append("svg")
-                .attr("width", width)
-                .attr("height", 50)
+                .attr("width", chart_width)
+                .attr("height", header_height)
                 .append("g")
-                .attr("transform", "translate(0,50)");
+                .attr("transform", "translate(0," + header_height + ")");
 
             labels.append("g")
                 .call(d3.axisTop().scale(x_scale))
@@ -37,25 +48,23 @@ define(['d3'],
                 dy = matrix.length;
 
             var canvas_pixel_width = dx;
-            var canvas_pixel_height = d3.min([height, dy]);
+            var canvas_pixel_height = d3.min([chart_height, dy]);
 
             d3.select(this).append("canvas")
                 .attr("width", canvas_pixel_width)
                 .attr("height", canvas_pixel_height)
-                .style("width", width + "px")
-                .style("height", height + "px")
-                .style("image-rendering",
-                    (window.navigator.userAgent && window.navigator.userAgent.match('WebKit'))
-                        ? "pixelated" : "-moz-crisp-edges") // TODO: works for my particular browser set
+                .style("width", chart_width + "px")
+                .style("height", chart_height + "px")
+                .style("image-rendering", crisp())
                 .call(draw_heatmap);
 
             function draw_heatmap(canvas) {
               var context = canvas.node().getContext("2d"),
-                  image = context.createImageData(dx, height);
+                  image = context.createImageData(dx, chart_height);
               // One canvas pixel for data horizontally,
               // but combine data rows into a single canvas pixel row.
 
-              var data_rows_per_pixel_row = dy / height;
+              var data_rows_per_pixel_row = dy / chart_height;
               //console.log('data rows / pixel row', data_rows_per_pixel_row);
 
               var color = d3.scaleLinear()
@@ -99,10 +108,10 @@ define(['d3'],
 
           var x_scale = d3.scaleLinear()
               .domain(x_extent).nice()
-              .range([0, width]);
+              .range([0, chart_width]);
           var y_scale = d3.scaleLinear()
               .domain(y_extent).nice()
-              .range([height, 0]);
+              .range([chart_height, 0]);
           return {
             x: x_scale,
             y: y_scale,
@@ -119,13 +128,13 @@ define(['d3'],
             var y_axis = d3.axisLeft().scale(scales.y);
 
             var svg_axes = d3.select(this).append("svg")
-                .attr("width", width + 50)
-                .attr("height", height + 50)
+                .attr("width", chart_width + gutter_width)
+                .attr("height", chart_height + 2 * header_height)
                 .style("position", "absolute")
                 .append("g")
-                .attr("transform", "translate(30,10)");
+                .attr("transform", "translate(" + gutter_width + "," + header_height + ")");
             svg_axes.append("g")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + chart_height + ")")
                 .call(x_axis);
             svg_axes.append("g")
                 .call(y_axis);
@@ -136,14 +145,14 @@ define(['d3'],
           selection.each(function (matrix, i) {
             var scales = scatterplot_scales(matrix);
             d3.select(this).append("canvas")
-                .attr("width", width)
-                .attr("height", height)
+                .attr("width", chart_width)
+                .attr("height", chart_height)
                 .style("position", "relative")
-                .style("left", "30px")
-                .style("top", "10px")
-                .style("width", width + "px")
-                .style("height", height + "px")
-                .style("image-rendering", "-moz-crisp-edges")
+                .style("left", gutter_width + "px")
+                .style("top", header_height + "px")
+                .style("width", chart_width + "px")
+                .style("height", chart_height + "px")
+                .style("image-rendering", crisp())
                 .call(draw_scatterplot);
 
             function draw_scatterplot(canvas) {
@@ -161,12 +170,12 @@ define(['d3'],
         function chart(selection) {
           selection.each(function (matrix, i) {
             d3.select(this).append("div")
-                .style("width", width + 'px')
+                .style("width", chart_width + 'px')
                 .style("float", "left")
                 .call(heatmap_axes)
                 .call(heatmap_body);
             d3.select(this).append("div")
-                .style("width", width + 'px')
+                .style("width", chart_width + 'px')
                 .style("float", "left")
                 .call(scatterplot_axes)
                 .call(scatterplot_body);
