@@ -44,7 +44,9 @@ define(['d3'],
                 .attr("height", canvas_pixel_height)
                 .style("width", width + "px")
                 .style("height", height + "px")
-                .style("image-rendering", "-moz-crisp-edges")
+                .style("image-rendering",
+                    (window.navigator.userAgent && window.navigator.userAgent.match('WebKit'))
+                        ? "pixelated" : "-moz-crisp-edges") // TODO: works for my particular browser set
                 .call(draw_heatmap);
 
             function draw_heatmap(canvas) {
