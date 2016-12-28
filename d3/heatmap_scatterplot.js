@@ -45,7 +45,8 @@ define(['d3'],
                     })
             ).domain(columns);
 
-            var labels = d3.select(this).append("svg")
+            var container_node = this;
+            var labels = d3.select(container_node).append("svg")
                 .attr("width", chart_width)
                 .attr("height", header_height)
                 .append("g")
@@ -67,7 +68,19 @@ define(['d3'],
                         .style('cursor', 'default');
                   } else {
                     d3.select(this)
-                        .style('cursor', 'pointer');
+                        .style('cursor', 'pointer')
+                        .on('click',function() {
+                          if (i > x_axis_index) {
+                            // If the selected column is between the two active ones,
+                            // take it as the y, and prefer to keep x stable.
+                            y_axis_index = i;
+                          } else {
+                            x_axis_index = i;
+                          }
+                          d3.select(container_node.parentNode).selectAll('.scatterplot-container')
+                              .call(scatterplot_axes)
+                              .call(scatterplot_body);
+                        });
                   }
                 });
           });
@@ -202,7 +215,9 @@ define(['d3'],
 
             function draw_scatterplot(canvas) {
               var context = canvas.node().getContext("2d");
-              context.fillStyle = "rgba(0,0,0,1)";
+              context.fillStyle = "rgba(0,0,0,0.5)";
+              // Use alpha to avoid immediately over-saturating,
+              // but it really depends on your data whether this makes sense.
               matrix.forEach(function (row) {
                 var x = scales.x(+row[scales.x_column]);
                 var y = scales.y(+row[scales.y_column]);
@@ -215,11 +230,13 @@ define(['d3'],
         function chart(selection) {
           selection.each(function (matrix, i) {
             d3.select(this).append("div")
+                .classed('heatmap-container', true)
                 .style("width", chart_width + 'px')
                 .style("float", "left")
                 .call(heatmap_axes)
                 .call(heatmap_body);
             d3.select(this).append("div")
+                .classed('scatterplot-container', true)
                 .style("width", chart_width + 'px')
                 .style("float", "left")
                 .call(scatterplot_axes)
