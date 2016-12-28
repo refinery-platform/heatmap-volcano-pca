@@ -13,7 +13,7 @@
         }
     });
     require(['d3', 'heatmap_scatterplot'], function (d3, heatmap_scatterplot) {
-        d3.tsv('data/rlogMat.tsv', function (error, matrix) {
+        d3.tsv('data/rlogMat.head.tsv', function (error, matrix) {
             if (error) throw error;
             d3.select("#target")
                     .data([matrix])

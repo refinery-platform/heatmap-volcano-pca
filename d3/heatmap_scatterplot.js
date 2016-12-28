@@ -96,10 +96,10 @@ define(['d3'],
           });
 
           var x_scale = d3.scaleLinear()
-              .domain(x_extent)
+              .domain(x_extent).nice()
               .range([0, width]);
           var y_scale = d3.scaleLinear()
-              .domain(y_extent)
+              .domain(y_extent).nice()
               .range([height, 0]);
           return {
             x: x_scale,
