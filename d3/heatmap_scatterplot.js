@@ -4,7 +4,9 @@ define(['d3'],
         var chart_width = 300,
             chart_height = 300,
             gutter_width = 50,
-            header_height = 50;
+            header_height = 50,
+            x_axis_index = 1,
+            y_axis_index = 2;
 
         function crisp() {
           // TODO: browser sniffing is bad, but this works for my particular browser set
@@ -56,6 +58,12 @@ define(['d3'],
             labels.selectAll('text').style('transform', 'rotate(90deg)');
             labels.selectAll('line').remove();
             labels.selectAll('path').remove();
+
+            labels.selectAll('text')
+                .filter(function (d, i) {
+                  return i == (x_axis_index - 1) || i == (y_axis_index - 1)
+                })
+                .style('font-weight', 'bold');
           });
         }
 
@@ -116,8 +124,8 @@ define(['d3'],
         function scatterplot_scales(matrix) {
           // TODO: only run this once
           // column-0 is ID
-          var x_axis_column = matrix.columns[1];
-          var y_axis_column = matrix.columns[2];
+          var x_axis_column = matrix.columns[x_axis_index];
+          var y_axis_column = matrix.columns[y_axis_index];
 
           var x_extent = d3.extent(matrix, function (row) {
             return +row[x_axis_column]
@@ -159,6 +167,14 @@ define(['d3'],
                 .call(x_axis);
             svg_axes.append("g")
                 .call(y_axis);
+            svg_axes.append("text")
+                .attr("transform", "translate(" + chart_width / 2 + "," + (chart_height + header_height * 0.75) + ")")
+                .text(matrix.columns[x_axis_index])
+                .style("text-anchor", "middle");
+            svg_axes.append("text")
+                .attr("transform", "translate(" + gutter_width * -0.75 + "," + chart_height / 2 + ") rotate(90)")
+                .text(matrix.columns[y_axis_index])
+                .style("text-anchor", "middle")
           });
         }
 
