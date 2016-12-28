@@ -60,10 +60,16 @@ define(['d3'],
             labels.selectAll('path').remove();
 
             labels.selectAll('text')
-                .filter(function (d, i) {
-                  return i == (x_axis_index - 1) || i == (y_axis_index - 1)
-                })
-                .style('font-weight', 'bold');
+                .each(function (d, i) {
+                  if (i == (x_axis_index - 1) || i == (y_axis_index - 1)) {
+                    d3.select(this)
+                        .style('font-weight', 'bold')
+                        .style('cursor', 'default');
+                  } else {
+                    d3.select(this)
+                        .style('cursor', 'pointer');
+                  }
+                });
           });
         }
 
@@ -174,7 +180,9 @@ define(['d3'],
             svg_axes.append("text")
                 .attr("transform", "translate(" + gutter_width * -0.75 + "," + chart_height / 2 + ") rotate(90)")
                 .text(matrix.columns[y_axis_index])
-                .style("text-anchor", "middle")
+                .style("text-anchor", "middle");
+            svg_axes.selectAll('text')
+                .style('cursor', 'default');
           });
         }
 
