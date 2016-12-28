@@ -121,8 +121,9 @@ define(['d3'],
             var svg_axes = d3.select(this).append("svg")
                 .attr("width", width + 50)
                 .attr("height", height + 50)
-                .attr("transform", "translate(50,0)")
-                .style("position", "absolute");
+                .style("position", "absolute")
+                .append("g")
+                .attr("transform", "translate(30,10)");
             svg_axes.append("g")
                 .attr("transform", "translate(0," + height + ")")
                 .call(x_axis);
@@ -138,7 +139,8 @@ define(['d3'],
                 .attr("width", width)
                 .attr("height", height)
                 .style("position", "relative")
-                .style("left", "50px")
+                .style("left", "30px")
+                .style("top", "10px")
                 .style("width", width + "px")
                 .style("height", height + "px")
                 .style("image-rendering", "-moz-crisp-edges")
