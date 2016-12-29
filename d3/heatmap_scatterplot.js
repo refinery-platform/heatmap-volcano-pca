@@ -83,7 +83,7 @@ define(['d3'],
                           root.call(chart); // Though we don't actually need to redraw everything.
                         })
                         .append('title')
-                          .text('alt-click to change x-axis');
+                        .text('alt-click to change x-axis');
                   }
                 });
           });
@@ -199,6 +199,15 @@ define(['d3'],
                 .style("text-anchor", "middle");
             svg_axes.selectAll('text')
                 .style('cursor', 'default');
+
+            var brush = d3.brush()
+                .extent([[0, 0], [chart_width, chart_height]])
+                .on("brush", function () {
+                  console.log('?')
+                });
+            svg_axes.append("g")
+                .attr("class", "brush")
+                .call(brush);
           });
         }
 
@@ -214,6 +223,7 @@ define(['d3'],
                 .style("width", chart_width + "px")
                 .style("height", chart_height + "px")
                 .style("image-rendering", crisp())
+                .style("z-index", -1) // beneath axes and brush
                 .call(draw_scatterplot);
 
             function draw_scatterplot(canvas) {
