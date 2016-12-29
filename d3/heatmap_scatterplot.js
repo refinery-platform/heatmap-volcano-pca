@@ -63,10 +63,12 @@ define(['d3'],
             labels.selectAll('text')
                 .each(function (d, i) {
                   if (i == (x_axis_index - 1) || i == (y_axis_index - 1)) {
+                    // Currently selected columns are bold...
                     d3.select(this)
                         .style('font-weight', 'bold')
                         .style('cursor', 'default');
                   } else {
+                    // all other columns can be clicked on.
                     d3.select(this)
                         .style('cursor', 'pointer')
                         .on('click', function () {
@@ -76,21 +78,9 @@ define(['d3'],
                             y_axis_index = i + 1;
                           }
 
-                          var heatmap_container = d3.select(container_node.parentNode)
-                              .selectAll('.heatmap-container');
-                          heatmap_container
-                              .selectAll('*').remove();
-                          heatmap_container
-                              .call(heatmap_axes)
-                              .call(heatmap_body); // TODO: Shouldn't need to redraw heatmap
-
-                          var scatterplot_container = d3.select(container_node.parentNode)
-                              .selectAll('.scatterplot-container');
-                          scatterplot_container
-                              .selectAll('*').remove();
-                          scatterplot_container
-                              .call(scatterplot_axes)
-                              .call(scatterplot_body);
+                          var root = d3.select(container_node.parentNode);
+                          root.selectAll('*').remove();
+                          root.call(chart); // Though we don't actually need to redraw everything.
                         })
                         .append('title')
                           .text('alt-click to change x-axis');
