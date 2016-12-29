@@ -91,11 +91,12 @@ define(['d3'],
 
         function heatmap_body(selection) {
           selection.each(function (matrix, i) {
-            var dx = matrix.columns.length - 1,
-                dy = matrix.length;
+            var canvas_pixel_width = matrix.columns.length - 1;
+            var canvas_pixel_height = d3.min([chart_height, matrix.length]);
 
-            var canvas_pixel_width = dx;
-            var canvas_pixel_height = d3.min([chart_height, dy]);
+            var row_scale = d3.scaleLinear()
+                .domain([0, matrix.length])
+                .range([0, canvas_pixel_height]);
 
             d3.select(this).append("canvas")
                 .attr("width", canvas_pixel_width)
@@ -107,11 +108,11 @@ define(['d3'],
 
             function draw_heatmap(canvas) {
               var context = canvas.node().getContext("2d"),
-                  image = context.createImageData(dx, chart_height);
+                  image = context.createImageData(canvas_pixel_width, chart_height);
               // One canvas pixel for data horizontally,
               // but combine data rows into a single canvas pixel row.
 
-              var data_rows_per_pixel_row = dy / chart_height;
+              var data_rows_per_pixel_row = canvas_pixel_height / chart_height;
 
               var extreme = d3.max(matrix_extent(matrix).map(function (minmax) {
                 return Math.abs(minmax)
@@ -122,15 +123,12 @@ define(['d3'],
                   .range(['blue', 'white', 'red']);
 
               for (var y = 0, p = -1; y < canvas_pixel_height; ++y) {
-                for (var x = 1; x <= dx; ++x) { // 0-column is row ID
-                  var mean = d3.mean(d3.range(data_rows_per_pixel_row).map(
-                      function (i) {
-                        return matrix[y + i][matrix.columns[x]];
-                        // TODO: If data_rows_per_pixel_row is not an integer, rows may be double counted
-                        // --> Use histogram machinery.
-                      }
-                  ));
-                  var rgb = d3.rgb(color(mean));
+                var matrix_y = Math.floor(row_scale.invert(y));
+                for (var x = 0; x < canvas_pixel_width; ++x) { // 0-column is row ID
+                  // TODO: For larger matrices, values will be sampled. Better to take a mean?
+                  var matrix_x = matrix.columns[x+1];
+                  var value = matrix[matrix_y][matrix_x];
+                  var rgb = d3.rgb(color(value));
                   image.data[++p] = rgb.r;
                   image.data[++p] = rgb.g;
                   image.data[++p] = rgb.b;
