@@ -6,7 +6,9 @@ define(['d3'],
             gutter_width = 50,
             header_height = 50,
             x_axis_index = 1,
-            y_axis_index = 2;
+            y_axis_index = 2,
+            x_axis_extent = [null, null],
+            y_axis_extent = [null, null];
 
         function crisp() {
           // TODO: browser sniffing is bad, but this works for my particular browser set
@@ -118,17 +120,29 @@ define(['d3'],
                 return Math.abs(minmax)
               }));
 
-              var color = d3.scaleLinear()
+              var map_color = d3.scaleLinear()
                   .domain([-extreme, 0, extreme])
                   .range(['blue', 'white', 'red']);
 
               for (var y = 0, p = -1; y < canvas_pixel_height; ++y) {
                 var matrix_y = Math.floor(row_scale.invert(y));
-                for (var x = 0; x < canvas_pixel_width; ++x) { // 0-column is row ID
+                var row = matrix[matrix_y];
+                var x_axis_value = row[matrix.columns[x_axis_index]];
+                var y_axis_value = row[matrix.columns[y_axis_index]];
+                var brushed = x_axis_value > x_axis_extent[0]
+                    && x_axis_value < x_axis_extent[1]
+                    && y_axis_value > y_axis_extent[0]
+                    && y_axis_value < y_axis_extent[1];
+
+                for (var x = 0; x < canvas_pixel_width; ++x) {
                   // TODO: For larger matrices, values will be sampled. Better to take a mean?
-                  var matrix_x = matrix.columns[x+1];
-                  var value = matrix[matrix_y][matrix_x];
-                  var rgb = d3.rgb(color(value));
+                  var value = row[matrix.columns[x + 1]]; // 0-column is row ID
+
+                  var color = map_color(value);
+                  if (brushed) {
+                    color = d3.color(color).darker().rgb();
+                  }
+                  var rgb = d3.rgb(color);
                   image.data[++p] = rgb.r;
                   image.data[++p] = rgb.g;
                   image.data[++p] = rgb.b;
@@ -170,6 +184,7 @@ define(['d3'],
 
         function scatterplot_axes(selection) {
           selection.each(function (matrix, i) {
+            var container_node = this;
             var scales = scatterplot_scales(matrix);
 
             var x_axis = d3.axisBottom().scale(scales.x);
@@ -200,8 +215,18 @@ define(['d3'],
 
             var brush = d3.brush()
                 .extent([[0, 0], [chart_width, chart_height]])
-                .on("brush", function () {
-                  console.log('?')
+                .on("end", function () {
+                  var x_y_extents = d3.transpose(d3.event.selection);
+                  x_axis_extent = x_y_extents[0].map(scales.x.invert);
+                  y_axis_extent = x_y_extents[1].map(scales.y.invert).reverse();
+                  var root = d3.select(container_node.parentNode);
+                  // Normally I would just redraw everything,
+                  // but can't figure out how to set the brush position on reload.
+                  //root.selectAll('*').remove();
+                  //root.call(chart);
+                  var heatmap = d3.select(container_node.parentNode).selectAll('.heatmap-container');
+                  heatmap.selectAll('canvas').remove();
+                  heatmap.call(heatmap_body);
                 });
             svg_axes.append("g")
                 .attr("class", "brush")
