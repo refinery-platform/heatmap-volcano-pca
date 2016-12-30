@@ -4,22 +4,40 @@
     <meta charset="utf-8"/>
 </head>
 <body>
+<p>
+    This page can serve as a model for a template in Refinery,
+    with heatmap_scatterplot.js being pulled in during the refinery build,
+    and a real refinery.js providing the connection to the API which is mocked
+    here by mock_refinery.js.
+</p>
+<p>
+    Note that nothing in this html dictates the visualization to be generated.
+    If all the required 3rd part libraries are  in place, then adding a new
+    visualization to Refinery should be as easy as including one more
+    visualization AMD during the build.
+</p>
 <div id="target"></div>
+<!-- TODO: In production, refer to local copies of libraries instead of relying on CDNJS. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
 <script>
     requirejs.config({
         "paths": {
-            "d3": "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min"
+            "d3": "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min",
+            "refinery": "mock_refinery"
         },
         "baseUrl": "src"
     });
-    require(['d3', 'heatmap_scatterplot'], function (d3, heatmap_scatterplot) {
-        d3.tsv('data/rlogMat.tsv', function (error, matrix) {
-            if (error) throw error;
-            d3.select("#target")
-                    .data([matrix])
-                    .call(heatmap_scatterplot());
-        });
+    require(['refinery'], function (refinery) {
+        var query = refinery.parse_query(window.location.search);
+        var vis = query.vis;
+        if (!vis.match(/^\w+$/)) {
+            alert('"vis" parameter contains weird characters')
+        } else {
+            require([vis], function (vis) {
+                vis();
+                // Pass no arguments: any URL parsing is done on the inside.
+            });
+        }
     });
 </script>
 </body>
