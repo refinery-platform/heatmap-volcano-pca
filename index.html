@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>heatmap-volcano-pca</title>
-  <style>
-    iframe {
-      width: 48%;
-      height: 500px;
-    }
-  </style>
+    <meta charset="utf-8"/>
 </head>
 <body>
-  <h1>heatmap-volcano-pca</h1>
-  <iframe src="as-phovea-global.html"></iframe>
-  <iframe src="as-vega.html"></iframe>
+<div id="target"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
+<script>
+    requirejs.config({
+        "paths": {
+            "d3": "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min"
+        },
+        "baseUrl": "src"
+    });
+    require(['d3', 'heatmap_scatterplot'], function (d3, heatmap_scatterplot) {
+        d3.tsv('data/rlogMat.tsv', function (error, matrix) {
+            if (error) throw error;
+            d3.select("#target")
+                    .data([matrix])
+                    .call(heatmap_scatterplot());
+        });
+    });
+</script>
 </body>
 </html>
