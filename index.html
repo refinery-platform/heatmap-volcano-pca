@@ -19,13 +19,26 @@
 <p>
     <a href="https://github.com/mccalluc/heatmap-volcano-pca">Source on Github</a>
 </p>
+<p>
+    Output depends on URL query. Here are some examples:
+</p>
+<ul>
+    <li><a href="?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1">Complete</a></li>
+    <li><a href="?vis=refinery_heatmap_scatterplot">Missing UUID</a></li>
+    <li><a href="?uuids[]=mock-uuid-1">Missing vis</a></li>
+    <li><a href="?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1&uuids[]=mock-uuid-2">Extra UUID</a></li>
+</ul>
 <div id="target"></div>
 <!-- TODO: In production, refer to local copies of libraries instead of relying on CDNJS. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
 <script>
+    window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+        alert(errorMsg
+                + '\n\n' + url
+                + ' (' + lineNumber + ':' + column + ')');
+    };
     requirejs.config({
         "paths": {
-            "d3": "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min",
             "refinery": "mock_refinery"
         },
         "baseUrl": "src"
@@ -33,12 +46,13 @@
     require(['refinery'], function (refinery) {
         var query = refinery.parse_query(window.location.search);
         var vis = query.vis;
-        if (!vis.match(/^\w+$/)) {
-            alert('"vis" parameter contains weird characters')
+        if (!vis) {
+            throw new Error('"vis" parameter is missing');
+        } else if (vis.match(/\W/)) {
+            throw new Error('"vis" parameter contains weird characters');
         } else {
             require([vis], function (vis) {
                 vis();
-                // Pass no arguments: any URL parsing is done on the inside.
             });
         }
     });
