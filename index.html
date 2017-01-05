@@ -28,34 +28,8 @@
     <li><a href="?uuids[]=mock-uuid-1">Missing vis</a></li>
     <li><a href="?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1&uuids[]=mock-uuid-2">Extra UUID</a></li>
 </ul>
-<div id="target"></div>
 <!-- TODO: In production, refer to local copies of libraries instead of relying on CDNJS. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
-<script>
-    window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-        alert(errorMsg
-                + '\n\n' + url
-                + ' (' + lineNumber + ':' + column + ')');
-    };
-    requirejs.config({
-        "paths": {
-            "refinery": "mock_refinery"
-        },
-        "baseUrl": "src"
-    });
-    require(['refinery'], function (refinery) {
-        var query = refinery.parse_query(window.location.search);
-        var vis = query.vis;
-        if (!vis) {
-            throw new Error('"vis" parameter is missing');
-        } else if (vis.match(/\W/)) {
-            throw new Error('"vis" parameter contains weird characters');
-        } else {
-            require([vis], function (vis) {
-                vis();
-            });
-        }
-    });
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"
+        data-main="https://rawgit.com/refinery-platform/vis-demo-utils/master/src/utils.js"></script>
 </body>
 </html>
