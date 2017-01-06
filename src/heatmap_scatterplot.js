@@ -280,6 +280,10 @@ define(['d3'],
           });
         }
 
+        chart.__test__ = {
+          matrix_extent: matrix_extent
+        };
+
         return chart;
       };
     }
