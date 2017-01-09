@@ -280,8 +280,12 @@ define(['d3'],
           });
         }
 
-        chart.__test__ = {
-          matrix_extent: matrix_extent
+        chart.__internals__ = {
+          matrix_extent: matrix_extent,
+          heatmap_axes: heatmap_axes,
+          heatmap_body: heatmap_body,
+          scatterplot_axes: scatterplot_axes,
+          scatterplot_body: scatterplot_body
         };
 
         return chart;

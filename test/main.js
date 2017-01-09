@@ -4,7 +4,7 @@ require.config({
 
   paths: {
     test: '../test', // ie, up and over from src
-    d3: "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min"
+    d3: "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3"
   },
 
   // dynamically load all test files
