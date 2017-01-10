@@ -1,6 +1,6 @@
 {
   "name": "heatmap-volcano-pca",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Heatmap + scatterplot for Refinery",
   "main": "src/refinery_heatmap_scatterplot.js",
   "scripts": {
