@@ -20,11 +20,12 @@ define(['d3'],
         }
 
         function matrix_extent(matrix) {
+          var id_col = matrix.columns[0];
           // There might be gains here if we can avoid excess array construction.
           function num_extent(row) {
-            return d3.extent(d3.values(row).map(function (str) {
-              return +str
-            }));
+            return d3.extent(
+                Object.keys(row).map(function (k) { return k == id_col ? NaN : +(row[k]); })
+            );
           }
 
           return matrix.reduce(function (extent_acc, row) {
@@ -238,8 +239,8 @@ define(['d3'],
           selection.each(function (matrix, i) {
             var scales = scatterplot_scales(matrix);
             d3.select(this).append("canvas")
-                .attr("width", chart_width)
-                .attr("height", chart_height)
+                .attr("width", chart_width+1) // We need to include the end points
+                .attr("height", chart_height+1) // of each range
                 .style("position", "relative")
                 .style("left", gutter_width + "px")
                 .style("top", header_height + "px")
