@@ -38,7 +38,7 @@ define(['d3'],
         }
 
         function heatmap_axes(selection) {
-          selection.each(function (matrix, i) {
+          selection.each(function (matrix) {
             var columns = matrix.columns.slice(1); // Skip ID column
 
             var x_scale = d3.scaleOrdinal(
@@ -93,7 +93,7 @@ define(['d3'],
         }
 
         function heatmap_body(selection) {
-          selection.each(function (matrix, i) {
+          selection.each(function (matrix) {
             var canvas_pixel_width = matrix.columns.length - 1;
             var canvas_pixel_height = d3.min([chart_height, matrix.length]);
 
@@ -114,8 +114,6 @@ define(['d3'],
                   image = context.createImageData(canvas_pixel_width, chart_height);
               // One canvas pixel for data horizontally,
               // but combine data rows into a single canvas pixel row.
-
-              var data_rows_per_pixel_row = canvas_pixel_height / chart_height;
 
               var extreme = d3.max(matrix_extent(matrix).map(function (minmax) {
                 return Math.abs(minmax)
@@ -184,7 +182,7 @@ define(['d3'],
         }
 
         function scatterplot_axes(selection) {
-          selection.each(function (matrix, i) {
+          selection.each(function (matrix) {
             var container_node = this;
             var scales = scatterplot_scales(matrix);
 
@@ -220,9 +218,9 @@ define(['d3'],
                   var x_y_extents = d3.transpose(d3.event.selection);
                   x_axis_extent = x_y_extents[0].map(scales.x.invert);
                   y_axis_extent = x_y_extents[1].map(scales.y.invert).reverse();
-                  var root = d3.select(container_node.parentNode);
                   // Normally I would just redraw everything,
                   // but can't figure out how to set the brush position on reload.
+                  //var root = d3.select(container_node.parentNode);
                   //root.selectAll('*').remove();
                   //root.call(chart);
                   var heatmap = d3.select(container_node.parentNode).selectAll('.heatmap-container');
@@ -236,7 +234,7 @@ define(['d3'],
         }
 
         function scatterplot_body(selection) {
-          selection.each(function (matrix, i) {
+          selection.each(function (matrix) {
             var scales = scatterplot_scales(matrix);
             d3.select(this).append("canvas")
                 .attr("width", chart_width+1) // We need to include the end points
@@ -265,7 +263,7 @@ define(['d3'],
         }
 
         function chart(selection) {
-          selection.each(function (matrix, i) {
+          selection.each(function () {
             d3.select(this).append("div")
                 .classed('heatmap-container', true)
                 .style("width", chart_width + 'px')

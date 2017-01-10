@@ -25,7 +25,7 @@ define([],
           return result;
         },
         node: function (_uuid) {
-          return new Promise(function (resolve, _reject) {
+          return new Promise(function (resolve, _reject) { /* global Promise */
             var matrix = [['gene', 'cond-a', 'cond-b', 'cond-c', 'cond-d']];
             for (var i = 0; i < 40000; ++i) {
               var a = Math.asin((Math.random() - 0.5) * 2);

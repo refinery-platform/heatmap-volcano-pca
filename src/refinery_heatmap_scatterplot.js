@@ -1,4 +1,4 @@
-requirejs.default_paths({
+requirejs.default_paths({ /* global requirejs */
   "d3": "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min"
 });
 define(['refinery', 'd3', 'heatmap_scatterplot'],
@@ -24,7 +24,7 @@ define(['refinery', 'd3', 'heatmap_scatterplot'],
               .attr('id', 'container');
           render(url);
 
-          function render(data_url, selector) {
+          function render(data_url, _selector) {
             d3.tsv(data_url, function (error, matrix) {
               if (error) throw error;
               d3.select('#container')
