@@ -1,7 +1,7 @@
 # heatmap-volcano-pca
 
 Heatmap + scatterplot visualization for Refinery:
-[demo](https://mccalluc.github.io/heatmap-volcano-pca/?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1)
+[demo](https://refinery-platform.github.io/heatmap-volcano-pca/?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1)
 
 To release a new version:
 
