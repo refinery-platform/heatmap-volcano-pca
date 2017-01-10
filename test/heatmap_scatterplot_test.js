@@ -201,33 +201,46 @@ define(['heatmap_scatterplot', 'd3', '../test/utils'], function (chart, d3, util
     });
 
     describe('combined', function () {
-      it('draws both', function () {
+      var vis;
+
+      beforeEach(function () {
         var matrix = [{id: 42, a: 0, b: 1, c: 2}];
         matrix.columns = ['id', 'a', 'b', 'c'];
-        var vis = d3
+        vis = d3
             .select('body')
             .data([matrix])
             .call(chart());
+      });
 
+      it('draws both', function () {
         expect(vis.size()).toEqual(1);
         expect(vis.selectAll('svg').size()).toEqual(2);
         expect(vis.selectAll('canvas').size()).toEqual(2);
-
-        // var title = vis.selectAll('title');
-        // setTimeout(function () {
-        //   // TODO: I want to see the selected column change.
-        //   console.log(vis.select('svg').node().innerHTML);
-        //   done();
-        // }, 1000);
-        // title.on('click');
       });
-      describe('interaction', function () {
-        describe('on heatmap', function () {
-          // TODO
-        });
-        describe('on scatterplot', function () {
-          // TODO
-        });
+
+      it('handles heatmap header click', function() {
+        function clickable_header() {
+          return vis.selectAll('title').node().parentNode;
+        }
+        function y_axis_label() {
+          return document.querySelectorAll('text')[4].textContent;
+        }
+        function x_axis_label() {
+          return document.querySelectorAll('text')[3].textContent;
+        }
+
+        var header = clickable_header();
+        // The textContent also includes the title text.
+        expect(header.textContent.slice(0, 1)).toEqual('c');
+        expect(x_axis_label()).toEqual('a');
+        expect(y_axis_label()).toEqual('b');
+        header.dispatchEvent(new MouseEvent('click'));
+
+        // Before and after, clickable header != x axis != y axis
+        header = clickable_header();
+        expect(header.textContent.slice(0,1)).toEqual('b');
+        expect(x_axis_label()).toEqual('a');
+        expect(y_axis_label()).toEqual('c');
       });
 
     });
