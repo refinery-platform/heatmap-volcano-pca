@@ -2,34 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8"/>
+    <title>heatmap-volcano-pca demo</title>
 </head>
 <body>
-<p>
-    This page can serve as a model for a template in Refinery,
-    with heatmap_scatterplot.js being pulled in during the refinery build,
-    and a real refinery.js providing the connection to the API which is mocked
-    here by mock_refinery.js.
-</p>
-<p>
-    Note that nothing in this html dictates the visualization to be generated.
-    If all the required 3rd party libraries are in place, then adding a new
-    visualization to Refinery should be as easy as including one more
-    visualization AMD during the build.
-</p>
-<p>
-    <a href="https://github.com/mccalluc/heatmap-volcano-pca">Source on Github</a>
-</p>
-<p>
-    Output depends on URL query. Here are some examples:
-</p>
-<ul>
-    <li><a href="?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1">Complete</a></li>
-    <li><a href="?vis=refinery_heatmap_scatterplot">Missing UUID</a></li>
-    <li><a href="?uuids[]=mock-uuid-1">Missing vis</a></li>
-    <li><a href="?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1&uuids[]=mock-uuid-2">Extra UUID</a></li>
-</ul>
-<!-- TODO: In production, refer to local copies of libraries instead of relying on CDNJS. -->
+<p>In a real application, you would provide the url for your data,
+   instead of creating it on-the-fly.</p>
+<div id="container"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"
-        data-main="https://rawgit.com/refinery-platform/vis-demo-utils/master/src/utils.js"></script>
+        data-main="index.js"></script>
 </body>
 </html>

@@ -1,10 +1,21 @@
 # heatmap-volcano-pca
 
-Heatmap + scatterplot visualization for Refinery:
-[demo](https://refinery-platform.github.io/heatmap-volcano-pca/?vis=refinery_heatmap_scatterplot&uuids[]=mock-uuid-1)
+Basic heatmap + scatterplot + PCA visualization.
 
-To release a new version:
+## Setup
+The core of the project is pure, old-fashioned javascript.
+Visit [index.html](to see a demonstration).
 
+## Test
+On the other hand, NPM is required to run the tests.
+At the moment you can run them on the commandline with:
+```
+$ npm install
+$ karma start --single-run --browsers Firefox 
+$ node_modules/.bin/eslint {src,test}/*"
+```
+
+## Release
 ```
 $ npm version patch
 $ git push --follow-tags origin master

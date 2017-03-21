@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mccalluc/heatmap-volcano-pca.git"
+    "url": "git+https://github.com/refinery-platform/heatmap-volcano-pca.git"
   },
   "keywords": [
     "refinery-vis"
@@ -16,13 +16,13 @@
   "author": "Chuck McCallum",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mccalluc/heatmap-volcano-pca/issues"
+    "url": "https://github.com/refinery-platform/heatmap-volcano-pca/issues"
   },
-  "homepage": "https://github.com/mccalluc/heatmap-volcano-pca#readme",
+  "homepage": "https://github.com/refinery-platform/heatmap-volcano-pca#readme",
   "devDependencies": {
     "eslint": "3.13.1",
     "jasmine-core": "2.5.2",
-    "karma": "1.3.0",
+    "karma": "^1.3.0",
     "karma-chrome-launcher": "2.0.0",
     "karma-cli": "1.0.1",
     "karma-firefox-launcher": "1.0.0",
