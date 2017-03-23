@@ -1,9 +1,9 @@
 require.config({
   // Karma serves files under /base, and our default is src
-  baseUrl: '/base/src',
+  baseUrl: '/base/js',
 
   paths: {
-    test: '../test', // ie, up and over from src
+    test: '../test', // ie, up and over from js
     d3: "https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3"
   },
 

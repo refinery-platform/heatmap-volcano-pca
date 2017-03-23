@@ -2,21 +2,37 @@
 
 Basic heatmap + scatterplot + PCA visualization.
 
-## Setup
-The core of the project is pure, old-fashioned javascript.
-Visit the [demo](https://refinery-platform.github.io/heatmap-volcano-pca/).
+## Install
+For now this is a demonstration of an old-fashioned stack:
+Plain Javascript is used for the visualization, and a Python
+CGI for backend.
+
+There are extensive Python dependencies: I suggest installing Anaconda,
+and then following the steps in [`.travis.yml`](.travis.yml).
+
+For development:
+```
+$ python -m CGIHTTPServer 8000
+```
+
+There is a [preview](https://refinery-platform.github.io/heatmap-volcano-pca/)
+online, but it only exercises the Javascript, not the Python.
 
 ## Test
-On the other hand, NPM is required to run the tests.
-At the moment you can run them on the commandline with:
+The Python tests and the JS are independent of each other
+
+End-to-end Python tests:
+```
+$ export PORT=8000 && ( python -m CGIHTTPServer $PORT & python test.py )
+```
+
+Javascript tests:
 ```
 $ npm install
 $ karma start --single-run --browsers Firefox 
-$ node_modules/.bin/eslint {src,test}/* 
 ```
 
-## Release
+Javascript lint:
 ```
-$ npm version patch
-$ git push --follow-tags origin master
+$ node_modules/.bin/eslint {js,test}/* 
 ```

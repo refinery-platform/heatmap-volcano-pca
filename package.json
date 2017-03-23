@@ -2,9 +2,9 @@
   "name": "heatmap-volcano-pca",
   "version": "0.0.4",
   "description": "Heatmap + scatterplot for Refinery",
-  "main": "src/refinery_heatmap_scatterplot.js",
+  "main": "js/heatmap_scatterplot.js",
   "scripts": {
-    "test": "karma start --single-run --browsers Firefox && node_modules/.bin/eslint {src,test}/*"
+    "test": "karma start --single-run --browsers Firefox && node_modules/.bin/eslint {js,test}/*"
   },
   "repository": {
     "type": "git",

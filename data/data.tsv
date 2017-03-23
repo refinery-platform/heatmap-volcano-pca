@@ -1,0 +1,5 @@
+id	cond-a	cond-b	cond-c	cond-d
+gene-1	1	0.5	0	0
+gene-2	0.5	1	0.5	0
+gene-3	0	0.5	1	0.5
+gene-4	0	0	0.5	1

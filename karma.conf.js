@@ -15,7 +15,7 @@ module.exports = function (config) {
     // but we "included: false" all but one because there
     // should be only a single script tag generated.
     files: [
-      {pattern: 'src/**/*.js', included: false},
+      {pattern: 'js/**/*.js', included: false},
       {pattern: 'test/**/*.js', included: false},
       'test/main.js'
     ],
